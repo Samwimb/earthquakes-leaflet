@@ -26,7 +26,7 @@ function getColor(x) {
 function createFeatures(earthquakeData, plateData) {
 
     // Creating a function to style earthquake marks
-    function style(feature) {
+    function circleStyle(feature) {
         return {
             color: "black",
             fillColor: getColor(feature.properties.mag),
@@ -35,6 +35,13 @@ function createFeatures(earthquakeData, plateData) {
             weight: 1,
             stroke: true,
             radius: +feature.properties.mag*4.5
+        };
+    }
+    // creating a function to style plate layer
+    function plateStyle() {
+        return {
+            color: "black",
+            fillOpacity: 0,
         };
     }
 
@@ -49,7 +56,7 @@ function createFeatures(earthquakeData, plateData) {
     // Run the onEachFeature function once for each piece of data in the array
     var earthquakes = L.geoJSON(earthquakeData, {
         pointToLayer: function (feature, latlng) {
-            return L.circleMarker(latlng, style(feature));
+            return L.circleMarker(latlng, circleStyle(feature));
         },
         onEachFeature: function (feature, layer) {
             layer.bindPopup("<h3>" + feature.properties.place + "<hr>Magnitude: "
@@ -58,6 +65,9 @@ function createFeatures(earthquakeData, plateData) {
     });
 
     var plates = L.geoJSON(plateData, {
+        style: function(feature) {
+            return plateStyle(feature)
+        },
         onEachFeature: function (feature, layer) {
             layer.bindPopup("<h3>" + feature.properties.PlateName + "</h3>");
         }
