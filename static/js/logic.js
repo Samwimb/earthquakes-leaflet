@@ -40,7 +40,7 @@ function createFeatures(earthquakeData, plateData) {
     // creating a function to style plate layer
     function plateStyle() {
         return {
-            color: "black",
+            color: "blue",
             fillOpacity: 0,
         };
     }
@@ -120,6 +120,8 @@ function createMap(earthquakes, plates) {
         37.09, -95.71
       ],
       zoom: 5,
+    //   ********
+    // time dimension code that is not necessary
     //   timeDimension: true,
     //   timeDimensionOptions: {
     //     timeInterval : "P1W/today",
@@ -131,7 +133,8 @@ function createMap(earthquakes, plates) {
     //     loopButton: true,
     //     autoPlay: true
     //   },
-      layers: [streetmap, earthquakes, plates]
+    // *********
+      layers: [streetmap, plates, earthquakes]
     });
   
     // Create a layer control
@@ -140,6 +143,35 @@ function createMap(earthquakes, plates) {
     L.control.layers(baseMaps, overlayMaps, {
       collapsed: false
     }).addTo(myMap);
+
+
+
+// Set up the legend
+var legend = L.control({ position: "bottomright" });
+legend.onAdd = function() {
+    var div = L.DomUtil.create("div", "info legend");
+    var limits = [0,1,2,3,4,5];
+    var colors = ["#93f402", "#d8f402", "#F4bc02", "#f49702", "#f45f02", "#f40202"];
+    // var labels = [];
+
+    for (var i = 0; i < limits.length; i++) {
+        div.innerHTML += "<i style='background: " + colors[i] + "'></i> " +
+          limits[i] + (limits[i + 1] ? "&ndash;" + limits[i + 1] + "<br>" : "+");
+      }
+
+return div;
+};
+
+// Adding legend to the map
+legend.addTo(myMap);
+
+
+
+
+
+
+
+
 
 
 //add time timeDimension
