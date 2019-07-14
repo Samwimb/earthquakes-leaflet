@@ -2,6 +2,7 @@
 // Store endpoint of API link
 var queryURL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
 var platesJSON = "PB2002_plates.json";
+// var platesJSON = 
 
 // Use d3 to access API endpoint
 d3.json(queryURL, function(data) {
@@ -122,17 +123,17 @@ function createMap(earthquakes, plates) {
       zoom: 5,
     //   ********
     // time dimension code that is not necessary
-    //   timeDimension: true,
-    //   timeDimensionOptions: {
-    //     timeInterval : "P1W/today",
-    //     period: "P2D",
-    //     autoPlay: true
-    //   },
-    //   timeDimensionControl: true,
-    //   timeDimensionControlOptions: {
-    //     loopButton: true,
-    //     autoPlay: true
-    //   },
+      timeDimension: true,
+      timeDimensionOptions: {
+        timeInterval : "P1W/today",
+        period: "P2D",
+        autoPlay: true
+      },
+      timeDimensionControl: true,
+      timeDimensionControlOptions: {
+        loopButton: true,
+        autoPlay: true
+      },
     // *********
       layers: [streetmap, plates, earthquakes]
     });
@@ -176,24 +177,24 @@ legend.addTo(myMap);
 
 //add time timeDimension
 //based on example from: http://jsfiddle.net/bielfrontera/5afucs89/
-// L.TimeDimension.Layer.GeoJson.GeometryCollection = L.TimeDimension.Layer.GeoJson.extend({
-//     // Do not modify features. Just return the feature if it intersects the time interval
-//     _getFeatureBetweenDates: function(feature, minTime, maxTime) {
-//       var time = new Date(feature.properties.time);
-//         if (time > maxTime || time < minTime) {
-//             return null;
-//         }
-//         return feature;
-//     }
-//   });
-//   var timeLayer = L.timeDimension.layer.geoJson.geometryCollection = function(layer, options) {
-//     return new L.TimeDimension.Layer.GeoJson.GeometryCollection(layer, options);
-//   };
+L.TimeDimension.Layer.GeoJson.GeometryCollection = L.TimeDimension.Layer.GeoJson.extend({
+    // Do not modify features. Just return the feature if it intersects the time interval
+    _getFeatureBetweenDates: function(feature, minTime, maxTime) {
+      var time = new Date(feature.properties.time);
+        if (time > maxTime || time < minTime) {
+            return null;
+        }
+        return feature;
+    }
+  });
+  var timeLayer = L.timeDimension.layer.geoJson.geometryCollection = function(layer, options) {
+    return new L.TimeDimension.Layer.GeoJson.GeometryCollection(layer, options);
+  };
 
 
-//   geoJsonTimeLayer = L.timeDimension.layer.geoJson.geometryCollection(earthquakes, {
-//     updateTimeDimension: true,
-//     updateTimeDimensionMode: 'replace',
-//     duration: 'PT1H',
-//     }).addTo(myMap);
+  geoJsonTimeLayer = L.timeDimension.layer.geoJson.geometryCollection(earthquakes, {
+    updateTimeDimension: true,
+    updateTimeDimensionMode: 'replace',
+    duration: 'PT1H',
+    }).addTo(myMap);
 }
