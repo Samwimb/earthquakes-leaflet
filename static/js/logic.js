@@ -1,15 +1,13 @@
 
 // Store endpoint of API link
 var queryURL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
-var platesJSON = "PB2002_plates.json";
-// var platesJSON = 
+// var platesJSON = "PB2002_plates.json";
+// var platesJSON = tectonicPlates
 
 // Use d3 to access API endpoint
 d3.json(queryURL, function(data) {
-    d3.json(platesJSON, function(data2) {
     // Once we get a response, send the data.features object to the createFeatures function
-        createFeatures(data.features, data2.features);
-    })
+        createFeatures(data.features, tectonicPlates.features);
     // createFeatures(data.features);
 });
 
@@ -46,13 +44,6 @@ function createFeatures(earthquakeData, plateData) {
         };
     }
 
-    // Define a function we want to run once for each feature in the features array
-    // Give each feature a popup describing the place and time of the earthquake
-    // function onEachFeature(feature, layer) {
-    //     layer.bindPopup("<h3>" + feature.properties.place + "<hr>Magnitude: "
-    //     + +feature.properties.mag + "</h3><hr><p>" + new Date(feature.properties.time) + "</p>");
-    // }
-  
     // Create a GeoJSON layer containing the features array on the earthquakeData object
     // Run the onEachFeature function once for each piece of data in the array
     var earthquakes = L.geoJSON(earthquakeData, {
@@ -61,7 +52,7 @@ function createFeatures(earthquakeData, plateData) {
         },
         onEachFeature: function (feature, layer) {
             layer.bindPopup("<h3>" + feature.properties.place + "<hr>Magnitude: "
-            + +feature.properties.mag + "</h3><hr><p>" + new Date(feature.properties.time) + "</p>");
+            +feature.properties.mag + "</h3><hr><p>" + new Date(feature.properties.time) + "</p>");
         }
     });
 
@@ -111,7 +102,7 @@ function createMap(earthquakes, plates) {
   
     // Create overlay object to hold our overlay layer
     var overlayMaps = {
-      Earthquakes: earthquakes,
+      // Earthquakes: earthquakes,
       Plates: plates,
     };
   
@@ -126,7 +117,7 @@ function createMap(earthquakes, plates) {
       timeDimension: true,
       timeDimensionOptions: {
         timeInterval : "P1W/today",
-        period: "P2D",
+        period: "P1D",
         autoPlay: true
       },
       timeDimensionControl: true,
@@ -135,7 +126,7 @@ function createMap(earthquakes, plates) {
         autoPlay: true
       },
     // *********
-      layers: [streetmap, plates, earthquakes]
+      layers: [streetmap, plates]
     });
   
     // Create a layer control
@@ -167,14 +158,6 @@ return div;
 legend.addTo(myMap);
 
 
-
-
-
-
-
-
-
-
 //add time timeDimension
 //based on example from: http://jsfiddle.net/bielfrontera/5afucs89/
 L.TimeDimension.Layer.GeoJson.GeometryCollection = L.TimeDimension.Layer.GeoJson.extend({
@@ -193,8 +176,8 @@ L.TimeDimension.Layer.GeoJson.GeometryCollection = L.TimeDimension.Layer.GeoJson
 
 
   geoJsonTimeLayer = L.timeDimension.layer.geoJson.geometryCollection(earthquakes, {
-    updateTimeDimension: true,
+    // updateTimeDimension: true,
     updateTimeDimensionMode: 'replace',
-    duration: 'PT1H',
+    duration: 'PT6H',
     }).addTo(myMap);
 }
